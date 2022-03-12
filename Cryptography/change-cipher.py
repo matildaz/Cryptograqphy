@@ -1,4 +1,3 @@
-from binhex import openrsrc
 import numpy as np
 import os
 
@@ -42,8 +41,8 @@ def changeCiphreDecode(encodedText: str, key: dict) -> str:
     return decodedText
 
 def readlines(state: str):
+    textMessage = []
     if state == "encode":
-        textMessage = ""
         with open(dir_path+'/read.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
@@ -51,12 +50,11 @@ def readlines(state: str):
             with open(dir_path+'/output.txt', 'a') as encodedText:
                 encodedText.write(encodeLine)
     elif state == "decode":
-        textMessage = ""
         with open(dir_path+'/output.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
             decodedLine = changeCiphreDecode(line,keyChangeArray)
-            with open(dir_path+'/output2.txt', 'a') as decodedText:
+            with open(dir_path+'/outputDecode.txt', 'a') as decodedText:
                 decodedText.write(decodedLine)
 
 if __name__ == "__main__":

@@ -28,8 +28,7 @@ def addSymbols():
                     lettersCount[letter.lower()] += 1
                 else:
                     lettersCount[letter.lower()] = 1
-    print(lettersCount)
-
+                    
 def counter(dictionary):
     cnt = 0
     for letter in dictionary:
@@ -40,7 +39,6 @@ if __name__ == "__main__":
     addSymbols()
     cnt = counter(lettersCount)
     sortedLetterCount = dict(sorted(lettersCount.items(), key = lambda x:x[1], reverse = 1))
-    print(sortedLetterCount)
     plt.bar(sortedLetterCount.keys(), np.divide(list(sortedLetterCount.values()), cnt))
     plt.ylim(0, 0.15)
     plt.show()
