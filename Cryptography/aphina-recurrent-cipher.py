@@ -1,8 +1,8 @@
 import numpy as np
 import os
 import random
-import sympy
 from sqlalchemy import false, true
+import sympy
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -16,13 +16,6 @@ decodeDictionary = {0:'a',1:'b',2:'c',3:'d',4:'e',
                     10:'k',11:'l',12:'m',13:'n',14:'o',
                     15:'p',16:'q',17:'r',18:'s',19:'t',
                     20:'u',21:'v',22:'w',23:'x',24:'y',25:'z'}
-
-def getRandomKey() -> tuple:
-    key = (1,1)
-    alpha = random.randint(0,len(encodeDictionary)-1)
-    beta = random.randint(0,len(encodeDictionary))
-    key = (alpha,beta)
-    return key
 
 def simpleNumbers(number: int) -> list:
     divisors = []
@@ -44,70 +37,80 @@ def areSimple(divisorsOfFirstNumber: list, divdisorsOfSecondNumber: list) -> boo
         if divisor in divdisorsOfSecondNumber:
             return false
     return true
-    
-def afinaCipherEncode(openText: str, encodeDict: dict, decodeDict: dict, key: tuple) -> str:
+
+def Extended_Euclidean_algorithm(firstNumber: int, SecondNumber: int) -> int:
+    if firstNumber <= 0 or SecondNumber <= 0:
+        return "Error"
+    x2, x1 = 1, 0
+    while SecondNumber > 0:
+        q = firstNumber // SecondNumber
+        r = firstNumber - q * SecondNumber
+        x = x2 - q * x1
+        firstNumber = SecondNumber
+        SecondNumber = r
+        x2 = x1
+        x1 = x
+    x = x2
+    return x
+
+def aphinaRecurrentEncode(openText: str, encodeDict: dict, decodeDict: dict, key1: tuple, key2: tuple):
     cipherText = ""
     for letter in openText:
         letter = letter.lower()
         if letter.isalpha() and letter in encodeDict:
             letterNumber = encodeDict[letter]
-            letterNumber = (letterNumber * key[0] + key[1]) % len(encodeDict)
+            letterNumber = (letterNumber * key1[0] + key1[1]) % len(encodeDict)
             cipherText += decodeDict[letterNumber]
+            alpha = (key1[0] * key2[0]) % len(encodeDict)
+            beta = (key1[1] + key2[1]) % len(encodeDict)
+            newKey = (alpha,beta)
+            key1 = key2
+            key2 = newKey
         else:
             cipherText += letter
-    return cipherText
+    return cipherText, key1, key2
 
-def afinaCipherDecode(cipherText: str, encodeDict: dict, decodeDict: dict, key: tuple) -> str:
+def aphinaRecurrentDecode(cipherText: str, encodeDict: dict, decodeDict: dict, key1: tuple, key2: tuple):
     openText = ""
-    euclid = Extended_Euclidean_algorithm(key[0],len(encodeDict))
-    dictionaryLen = len(encodeDict)
     for letter in cipherText:
         letter = letter.lower()
         if letter.isalpha() and letter in encodeDict:
-            letterNumber = encodeDict[letter] + dictionaryLen
-            letterNumber = ((letterNumber - key[1]) * euclid) % dictionaryLen
+            letterNumber = encodeDict[letter]
+            antiKey = Extended_Euclidean_algorithm(key1[0], len(encodeDict))
+            letterNumber = ((letterNumber - key1[1]) * antiKey) % len(encodeDict)
             openText += decodeDict[letterNumber]
-        else:
+            alpha = (key1[0] * key2[0]) % len(encodeDict)
+            beta = (key1[1] + key2[1]) % len(encodeDict)
+            newKey = (alpha,beta)
+            key1 = key2
+            key2 = newKey
+        else: 
             openText += letter
-    return openText
+    return openText, key1, key2
 
-def readlines(state: str, key: tuple):
-    if areSimple(simpleNumbers(key[0]),simpleNumbers(len(encodeDictionary))) is false:
-        print("Invalid key")
+def readlines(state: str, key1: tuple, key2: tuple):
+    if areSimple(simpleNumbers(key1[0]),simpleNumbers(len(encodeDictionary))) is false:
+        print("Invalid key1")
+        return
+    if areSimple(simpleNumbers(key2[0]),simpleNumbers(len(encodeDictionary))) is false:
+        print("Invalid key2")
         return
     textMessage = []
     if state == "encode":
         with open(dir_path+'/read.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
-            encodeLine = afinaCipherEncode(line,encodeDictionary,decodeDictionary,key)
+            encodeLine, key1, key2 = aphinaRecurrentEncode(line, encodeDictionary, decodeDictionary, key1, key2)
             with open(dir_path+'/output.txt', 'a') as encodedText:
                 encodedText.write(encodeLine)
     elif state == "decode":
         with open(dir_path+'/output.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
-            decodeLine = afinaCipherDecode(line,encodeDictionary,decodeDictionary,key)
+            decodedLine, key1, key2 = aphinaRecurrentDecode(line, encodeDictionary, decodeDictionary, key1, key2)
             with open(dir_path+'/outputDecode.txt', 'a') as decodedText:
-                decodedText.write(decodeLine)
+                decodedText.write(decodedLine)
 
-def Extended_Euclidean_algorithm(a: int, b: int) -> int:
-    if a <= 0 or b <= 0:
-        return "Error"
-    x2, x1 = 1, 0
-    while b > 0:
-        q = a // b
-        r = a - q * b
-        x = x2 - q * x1
-        a = b
-        b = r
-        x2 = x1
-        x1 = x
-    x = x2
-    if x < 0:
-        x = x + b
-    return x
 
 if __name__ == "__main__":
-    readlines("decode", (5,13))
-
+    readlines("decode",(5,13),(7,13))
