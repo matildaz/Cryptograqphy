@@ -113,4 +113,42 @@ def readlines(state: str, key1: tuple, key2: tuple):
 
 
 if __name__ == "__main__":
-    readlines("decode",(5,13),(7,13))
+    # readlines("encode",(5,13),(7,11))
+    keys = []
+    # for alpha in [1,3,5,7,9,11,13,15,17,19,21,23,25]:
+    #     for beta in range(0,26):
+    #         if (8*alpha + beta)% 26 == 7:
+    #             keys.append((alpha,beta))
+    # print()
+    # print(keys)
+    # print()
+    # print(len(keys))
+    # print()
+
+    # for alpha1, beta1 in zip([1,3,5,7,9,11,13,15,17,19,21,23,25],[25,9,19,3,23,7,17,1,11,21,5,15]):
+    #     for beta2 in range(1,26):
+    #         for alpha2 in [1,3,5,7,9,11,13,15,17,19,21,23,25]:
+    #             openText, key1, key2 = aphinaRecurrentDecode("h qnr", encodeDictionary, decodeDictionary, (alpha1,beta1), (alpha2,beta2))
+    #             if openText == "i saw" or openText == "i age":
+    #                 keys.append(((alpha1,beta1),(alpha2,beta2))) 
+    # print()
+    # print(keys)
+    # print()
+    # print(len(keys))
+    # print()
+
+    print()
+    openText, key1, key2 = aphinaRecurrentDecode("h qnr mg apjt", encodeDictionary, decodeDictionary, (7,3), (23,24))
+    print(openText)
+
+    print()
+    openText, key1, key2 = aphinaRecurrentDecode("h qnr mg apjt", encodeDictionary, decodeDictionary, (1,25), (17,16))
+    print(openText)
+
+    print()
+    openText, key1, key2 = aphinaRecurrentDecode("h qnr mg apjt", encodeDictionary, decodeDictionary, (1,25), (3,14))
+    print(openText)
+
+    print()
+    openText, key1, key2 = aphinaRecurrentDecode("h qnr mg apjt", encodeDictionary, decodeDictionary, (7,3), (9,10))
+    print(openText)
