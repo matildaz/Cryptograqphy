@@ -109,5 +109,5 @@ def Extended_Euclidean_algorithm(a: int, b: int) -> int:
     return x
 
 if __name__ == "__main__":
-    readlines("decode", (5,13))
+    readlines("encode", (5,13))
 
