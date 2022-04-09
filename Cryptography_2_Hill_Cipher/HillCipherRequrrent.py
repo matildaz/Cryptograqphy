@@ -2,6 +2,7 @@ from curses.ascii import isdigit
 import os
 from matplotlib.pyplot import text
 import numpy as np
+from pandas import array
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -21,6 +22,23 @@ decodeDictionary = {0:'a',1:'b',2:'c',3:'d',4:'e',
                     25:'z', 26:'0',27:'1',28:'2',29:'3',
                     30:'4',31:'5',32:'6',33:'7',34:'8',
                     35:'9',36:' ',37:'.',38:',',39:'?',40:'!'}
+
+def Extended_Euclidean_algorithm(a: int, b: int) -> int:
+    if a <= 0 or b <= 0:
+        return "Error"
+    x2, x1 = 1, 0
+    while b > 0:
+        q = a // b
+        r = a - q * b
+        x = x2 - q * x1
+        a = b
+        b = r
+        x2 = x1
+        x1 = x
+    x = x2
+    if x < 0:
+        x = x + b
+    return x
 
 def hillCipherEncode(openText: str, matrix1: np.array, matrix2: np.array, encodeDict: dict, decodeDict: dict, state: str):
     arrayOfLetters: np.array = []
@@ -61,7 +79,15 @@ def encodeArray(array: np.array, matrix1: np.array, matrix2: np.array, state: st
             matrix2[row][number] = round(matrix2[row][number], 2)
     newArray: np.array(np.array()) = []
     for item in array:
-        newItem = np.array(item).dot(matrix1)
+        if state == "decode":
+            invertMatrix = np.linalg.inv(matrix1) * np.linalg.det(matrix1)
+            invertDet = Extended_Euclidean_algorithm(round(np.linalg.det(matrix1)),len(decodeDictionary))
+            if invertDet is int:
+                invertMatrix *= invertDet
+                invertMatrix %= len(decodeDictionary)
+            newItem = np.array(item).dot(invertMatrix)
+        else:
+            newItem = np.array(item).dot(matrix1)
         newMatrix = matrix2.dot(matrix1)
         matrix1 = matrix2
         matrix2 = newMatrix
@@ -96,7 +122,7 @@ def hillCipherDecode(cipherText: str, matrix1: np.array, matrix2: np.array, enco
         arrayOfNumbers.append(partOfArray)
         partOfArray = []
     openText = ''
-    matrix1, matrix2, arrayOfNumbers = encodeArray(arrayOfNumbers, np.linalg.inv(matrix1), np.linalg.inv(matrix2), state)
+    matrix1, matrix2, arrayOfNumbers = encodeArray(arrayOfNumbers, matrix1, matrix2, state)
     for item in arrayOfNumbers:
         for number in item:
             if number in decodeDict:
@@ -130,16 +156,33 @@ def readState(state: str, key1: np.array, key2: np.array):
                 decodedText.write(decodeLine)
 
 if __name__ == "__main__":
-    key1 = np.array([[2,5,7],[6,3,4],[5,-2,-3]], dtype = float)
-    key2 = np.array([[1,0,0],[0,1,0],[0,0,1]], dtype = float)
-    state = 'decode'
-    readState(state, key1, key2)
+    key1 = np.array([[2,23,8],[6,9,4],[5,-2,-3]], dtype = float)
+    key2 = np.array([[1,0,0],[0,1,7],[0,0,1]], dtype = float)
+    
+    arrayNumbers = []
+    text = "helloW"
+    key3, key4, text = hillCipherEncode(text,key1,key2,encodeDictionary,decodeDictionary, "encode")
+    for i in text:
+        arrayNumbers.append(encodeDictionary[i.lower()])
+    print(arrayNumbers)
+    print(text)
 
-    # text = "hello world"
-    # key3, key4, text = hillCipherEncode(text,key1,key2,encodeDictionary,decodeDictionary)
-    # print(key3, "\n")
-    # print(key4, "\n")
-    # print(text, "\n")
+    arrayNumbers = []
+    text = "WorldH"
+    key3, key4, text = hillCipherEncode(text,key1,key2,encodeDictionary,decodeDictionary, "encode")
+    for i in text:
+        arrayNumbers.append(encodeDictionary[i.lower()])
+    print(arrayNumbers)
+    print(text)
+
+    arrayNumbers = []
+    text = "Cipher"
+    key3, key4, text = hillCipherEncode(text,key1,key2,encodeDictionary,decodeDictionary, "encode")
+    for i in text:
+        arrayNumbers.append(encodeDictionary[i.lower()])
+    print(arrayNumbers)
+    print(text)
+    
 
     # key3, key4, text = hillCipherDecode(text,key1,key2,encodeDictionary,decodeDictionary)
     # print(key3, "\n")
