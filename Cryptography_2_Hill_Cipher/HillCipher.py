@@ -159,12 +159,13 @@ def analizator(state: str, openText: str):
 
 if __name__ == "__main__":
     # openText = "aaa"
-    # state = "decode"
-    # matrix = np.array([
-    #     [2,23,7],
-    #     [6,7,4],
-    #     [5,-2,-3]],
-    #      dtype = float)
+    state = "encode"
+    matrix = np.array([
+        [2,23,7],
+        [6,7,4],
+        [5,-2,-3]],
+         dtype = float)
+    text = hillCipherEncode('Hello world', matrix, encodeDictionary, decodeDictionary)
     # print(np.linalg.det(matrix))
     # readState(state, matrix)
     # analizator(state, openText)
@@ -175,16 +176,16 @@ if __name__ == "__main__":
     
     
     
-    matrix = np.array([[2,5,7],[6,3,4],[5,-10,-3]], dtype = float)
-    print(np.linalg.det(matrix)%41)
+    # matrix = np.array([[2,5,7],[6,3,4],[5,-10,-3]], dtype = float)
+    # print(np.linalg.det(matrix)%41)
     # print(round(np.linalg.det(matrix)))
     # state = 'decode'
     # readState(state,matrix)
     # print(matrix.dot(np.linalg.inv(matrix)))
-    text = hillCipherEncode('Hello world', matrix, encodeDictionary, decodeDictionary)
-    encode_matrix = np.array([[7,4,11],[11,14,36],[22,14,17]], dtype=float)
-    new_matrix = np.array(encode_matrix).dot(matrix)
-    print(new_matrix % 41)
+    # text = hillCipherEncode('Hello world', matrix, encodeDictionary, decodeDictionary)
+    # encode_matrix = np.array([[7,4,11],[11,14,36],[22,14,17]], dtype=float)
+    # new_matrix = np.array(encode_matrix).dot(matrix)
+    # print(new_matrix % 41)
     # print((np.linalg.inv(matrix) * np.linalg.det(matrix) * Extended_Euclidean_algorithm(-1,41) )% 41)
     # key1 = np.array([[11,25,32],[40,25,25],[8,38,36]])
     # key2 = np.array([[1,40,1],[3,0,7],[27,12,24]])
