@@ -1,4 +1,3 @@
-from curses.ascii import isdigit
 import os
 import numpy as np
 from pandas import array
