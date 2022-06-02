@@ -1,6 +1,6 @@
 import os
+from appscript import k
 import numpy as np
-from pandas import array
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -9,49 +9,44 @@ encodeDictionary = {'a':0,'b':1,'c':2,'d':3,'e':4,
                     'k':10,'l':11,'m':12,'n':13,'o':14,
                     'p':15,'q':16,'r':17,'s':18,'t':19,
                     'u':20,'v':21,'w':22,'x':23,'y':24,
-                    'z':25,'0':26,'1':27,'2':28,'3':29,
-                    '4':30,'5':31,'6':32,'7':33,'8':34,
-                    '9':35,' ':36,'.':37,',':38,'?':39,'!':40}
+                    'z':25}
 decodeDictionary = {0:'a',1:'b',2:'c',3:'d',4:'e',
                     5:'f',6:'g',7:'h',8:'i',9:'j',
                     10:'k',11:'l',12:'m',13:'n',14:'o',
                     15:'p',16:'q',17:'r',18:'s',19:'t',
                     20:'u',21:'v',22:'w',23:'x',24:'y',
-                    25:'z', 26:'0',27:'1',28:'2',29:'3',
-                    30:'4',31:'5',32:'6',33:'7',34:'8',
-                    35:'9',36:' ',37:'.',38:',',39:'?',40:'!'}
+                    25:'z'}
 
-def encodeVizhiner(openText: str, key: array, encodeDict: dict, decodeDict: dict) -> str:
+def encodeVizhiner(openText: str, key: list, encodeDict: dict, decodeDict: dict) -> str:
     cipherText = ""
-    cnt = 0
-    for index,letter in enumerate(openText):
+    for letter in openText:
         letter = letter.lower()
-        index = (index - cnt) % len(key)
-        numberToAdd = key[index]
         if letter in encodeDict:
+            numberToAdd = key[0]
             numberOfLetter = (encodeDict[letter] + numberToAdd) % len(decodeDict)
             cipherText += decodeDict[numberOfLetter]
+            reusableKeyNumber = key.pop(0)
+            key.append(reusableKeyNumber)
         else:
-            cnt += 1
             continue
-    return cipherText
+    return cipherText, key
 
-def decodeVizhiner(cipherText: str, key: array, encodeDict: dict, decodeDict: dict) -> str:
+def decodeVizhiner(cipherText: str, key: list, encodeDict: dict, decodeDict: dict) -> str:
     openText = ""
-    for index,letter in enumerate(cipherText):
+    for letter in cipherText:
         letter = letter.lower()
-        index = index % len(key)
-        numberToAdd = key[index]
         if letter in encodeDict:
+            numberToAdd = key[0]
             numberOfLetter = encodeDict[letter]
-            numberToAdd = key[index]
             if numberOfLetter < numberToAdd:
                 numberOfLetter += len(decodeDict)
             numberOfLetter -= numberToAdd
             openText += decodeDict[numberOfLetter]
+            reusableKeyNumber = key.pop(0)
+            key.append(reusableKeyNumber)
         else:
             continue
-    return openText
+    return openText, key
 
 def makeKey(keyStr: str, encodeDict: dict):
     key = []
@@ -66,7 +61,7 @@ def main(state: str, key: str):
         with open(dir_path+'/read.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
-            encodeLine = encodeVizhiner(line,newKey,encodeDictionary,decodeDictionary)
+            encodeLine, newKey = encodeVizhiner(line,newKey,encodeDictionary,decodeDictionary)
             encodeLine += '\n'
             with open(dir_path+'/output.txt', 'a') as encodedText:
                 encodedText.write(encodeLine)
@@ -74,12 +69,20 @@ def main(state: str, key: str):
         with open(dir_path+'/output.txt', 'r') as text:
             textMessage = text.readlines()
         for line in textMessage:
-            decodeLine = decodeVizhiner(line,newKey,encodeDictionary,decodeDictionary)
+            decodeLine, newKey = decodeVizhiner(line,newKey,encodeDictionary,decodeDictionary)
             decodeLine += '\n'
             with open(dir_path+'/outputDecode.txt', 'a') as decodedText:
                 decodedText.write(decodeLine)
 
 if __name__ == "__main__":
-    key = "qwerty"
+    # text, key = (encodeVizhiner("Hello World!", makeKey("apple", encodeDictionary), encodeDictionary, decodeDictionary))
+    # print(text)
+    # print(key)
+    # text, key = decodeVizhiner(text,makeKey("apple", encodeDictionary), encodeDictionary, decodeDictionary)
+    # print(text)
+    # print(key)
+    # for i in zip(text,"hello world!"):
+    #     print(encodeDictionary[i[1]], "->", encodeDictionary[i[0]])
+    key = "bye"
     state = "decode"
     main(state, key)

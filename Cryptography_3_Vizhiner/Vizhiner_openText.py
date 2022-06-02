@@ -90,6 +90,6 @@ def main(state: str, key: str):
                 decodedText.write(decodeLine)
 
 if __name__ == "__main__":
-    key = "abc"
+    key = "qwerty"
     state = "decode"
     main(state, key)
