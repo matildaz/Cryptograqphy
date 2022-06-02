@@ -83,6 +83,6 @@ if __name__ == "__main__":
     # print(key)
     # for i in zip(text,"hello world!"):
     #     print(encodeDictionary[i[1]], "->", encodeDictionary[i[0]])
-    key = "bye"
-    state = "decode"
+    key = "qwert"
+    state = "encode"
     main(state, key)

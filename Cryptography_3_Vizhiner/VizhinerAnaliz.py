@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import math
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -52,10 +53,11 @@ def findCommonPhrase(dictionary: dict({str: int})):
 def countLetters(line: str):
     dictionary: dict({str: int}) = {}
     for letter in line:
-        if letter in dictionary:
-            dictionary[letter] += 1
-        else:
-            dictionary[letter] = 1
+        if letter in encodeDictionary:
+            if letter in dictionary:
+                dictionary[letter] += 1
+            else:
+                dictionary[letter] = 1
     return dictionary
 
 def findIndexOfCoincidence(textLine: str):
@@ -63,11 +65,12 @@ def findIndexOfCoincidence(textLine: str):
     length = len(textLine)
     dictionary = countLetters(textLine)
     for item in dictionary.items():
-        summ += (item[1] * (item[1] - 1)) / (length * (length - 1))
+        summ += (item[1]*(item[1]-1))/(length*(length-1))
     return summ
 
 if __name__ == "__main__":
     
+    # Вычисление индекса совпадения 
     globalDictionary = {}
     text: str = ""
     count = 0
@@ -79,64 +82,47 @@ if __name__ == "__main__":
             globalDictionary = addToDictionary(globalDictionary,localDict)
             count += len(line)
 
-    print(len(text))
-    summ1 = findIndexOfCoincidence(text)
-    print("При длине ключа 1 коэфициент совпадения равен " , summ1)
-
-    summ2_1 = findIndexOfCoincidence(text[:round(len(text)/2)])
-    summ2_2 = findIndexOfCoincidence(text[round(len(text)/2):])
-    summ2 = (summ2_1 + summ2_2)/2
-    print("При длине ключа 2 коэфициент совпадения равен " , summ2)
-
-    summ3_1 = findIndexOfCoincidence(text[:round(len(text)/3)])
-    summ3_2 = findIndexOfCoincidence(text[round(len(text)/3):2*round(len(text)/3)])
-    summ3_3 = findIndexOfCoincidence(text[2*round(len(text)/3):])
-    summ3 = (summ3_1 + summ3_2 + summ3_3)/3
-    print("При длине ключа 3 коэфициент совпадения равен " , summ3)
-
-    summ4_1 = findIndexOfCoincidence(text[:round(len(text)/4)])
-    summ4_2 = findIndexOfCoincidence(text[round(len(text)/4):round(len(text)/2)])
-    summ4_3 = findIndexOfCoincidence(text[round(len(text)/2):3*round(len(text)/4)])
-    summ4_4 = findIndexOfCoincidence(text[3*round(len(text)/4):])
-    summ4 = (summ4_1 + summ4_2 + summ4_3 + summ4_4)/4
-    print("При длине ключа 4 коэфициент совпадения равен " , summ4)
-
-    summ5_1 = findIndexOfCoincidence(text[:round((len(text)-4)/5)])
-    summ5_2 = findIndexOfCoincidence(text[round((len(text)-4)/5):2*round((len(text)-4)/5)])
-    summ5_3 = findIndexOfCoincidence(text[2*round((len(text)-4)/5):3*round((len(text)-4)/5)])
-    summ5_4 = findIndexOfCoincidence(text[3*round((len(text)-4)/5):4*(round((len(text))-4/5))])
-    summ5_5 = findIndexOfCoincidence(text[4*round((len(text)-4)/5):])
-    summ5 = (summ5_1 + summ5_2 + summ5_3 + summ5_4 + summ5_5)/5
-    print("При длине ключа 5 коэфициент совпадения равен " , summ5)
-
-    summ6_1 = findIndexOfCoincidence(text[:round(len(text)/6)])
-    summ6_2 = findIndexOfCoincidence(text[round(len(text)/6):round(len(text)/3)])
-    summ6_3 = findIndexOfCoincidence(text[round(len(text)/3):round(len(text)/2)])
-    summ6_4 = findIndexOfCoincidence(text[round(len(text)/2):2*round(len(text)/3)])
-    summ6_5 = findIndexOfCoincidence(text[2*round(len(text)/3):5*round(len(text)/6)])
-    summ6_6 = findIndexOfCoincidence(text[5*round(len(text)/6):])
-    summ6 = (summ6_1 + summ6_2 + summ6_3 + summ6_4 + summ6_5 + summ6_5)/6
-    print("При длине ключа 6 коэфициент совпадения равен " , summ6)
+    for j in range(1,11):
+        stride = math.ceil(len(text) / j)
+        parts = [text[i:i + stride] for i in range(0, len(text), stride)]
+        sum_0 = 0
+        for item in parts:
+            sum_0 += findIndexOfCoincidence(item)
+        print("При длине ключа",j," коэфициент совпадения равен" , sum_0/j)
     
 
-    # globalDictionary = {}
-    # with open(dir_path+'/output.txt', 'r') as text:
-    #         textMessage = text.readlines()
-    # for line in textMessage:
-    #     localDict = phreses(line)
-    #     globalDictionary = addToDictionary(globalDictionary,localDict)
-    # commonPhrase, number = findCommonPhrase(globalDictionary)
-    # print("Самая распространенная фраза -", commonPhrase)
-    # print("Она встретилась ", number, " раз")
+    # Вычисление самого распространенного выражения из 3 символов
+    globalDictionary = {}
+    with open(dir_path+'/output.txt', 'r') as text_1:
+            textMessage = text_1.readlines()
+    for line in textMessage:
+        localDict = phreses(line)
+        globalDictionary = addToDictionary(globalDictionary,localDict)
+    commonPhrase, number = findCommonPhrase(globalDictionary)
+    print("Самая распространенная фраза -", commonPhrase)
+    print("Она встретилась ", number, " раз")
 
-    # with open(dir_path+'/output.txt', 'r') as text:
-    #         textMessage = text.readlines()
-    # gapBefore = 0
-    # globalArray = []
-    # for line in textMessage:
-    #     array, gapBefore = findKeyLength(commonPhrase, line, gapBefore)
-    #     if array != []:
-    #         globalArray.append(array)
+
+    # line1 = ""
+    # line2 = ""
+    # line3 = ""
     
-    # print("Расстояния между распространенными фразами -", globalArray)
+    # for index,letter in enumerate(text):
+    #     if index % 3 == 0:
+    #         line1 += letter
+    #     elif index % 3 == 1:
+    #         line2 += letter
+    #     else:
+    #         line3 += letter
+
+    # dictinatyLine1 = countLetters(line1)
+    # dictinatyLine1 = dict(sorted(dictinatyLine1.items(), key=lambda x: x[1], reverse=True))
+    # dictinatyLine2 = countLetters(line2)
+    # dictinatyLine2 = dict(sorted(dictinatyLine2.items(), key=lambda x: x[1], reverse=True))
+    # dictinatyLine3 = countLetters(line3)
+    # dictinatyLine3 = dict(sorted(dictinatyLine3.items(), key=lambda x: x[1], reverse=True))
+
+    # print(dictinatyLine1)
+    # print(dictinatyLine2)
+    # print(dictinatyLine3)
 
