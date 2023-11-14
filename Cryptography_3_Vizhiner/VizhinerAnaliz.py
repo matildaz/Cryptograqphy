@@ -103,26 +103,26 @@ if __name__ == "__main__":
     print("Она встретилась ", number, " раз")
 
 
-    # line1 = ""
-    # line2 = ""
-    # line3 = ""
+    line1 = ""
+    line2 = ""
+    line3 = ""
     
-    # for index,letter in enumerate(text):
-    #     if index % 3 == 0:
-    #         line1 += letter
-    #     elif index % 3 == 1:
-    #         line2 += letter
-    #     else:
-    #         line3 += letter
+    for index,letter in enumerate(text):
+        if index % 3 == 0:
+            line1 += letter
+        elif index % 3 == 1:
+            line2 += letter
+        else:
+            line3 += letter
 
-    # dictinatyLine1 = countLetters(line1)
-    # dictinatyLine1 = dict(sorted(dictinatyLine1.items(), key=lambda x: x[1], reverse=True))
-    # dictinatyLine2 = countLetters(line2)
-    # dictinatyLine2 = dict(sorted(dictinatyLine2.items(), key=lambda x: x[1], reverse=True))
-    # dictinatyLine3 = countLetters(line3)
-    # dictinatyLine3 = dict(sorted(dictinatyLine3.items(), key=lambda x: x[1], reverse=True))
+    dictinatyLine1 = countLetters(line1)
+    dictinatyLine1 = dict(sorted(dictinatyLine1.items(), key=lambda x: x[1], reverse=True))
+    dictinatyLine2 = countLetters(line2)
+    dictinatyLine2 = dict(sorted(dictinatyLine2.items(), key=lambda x: x[1], reverse=True))
+    dictinatyLine3 = countLetters(line3)
+    dictinatyLine3 = dict(sorted(dictinatyLine3.items(), key=lambda x: x[1], reverse=True))
 
-    # print(dictinatyLine1)
-    # print(dictinatyLine2)
-    # print(dictinatyLine3)
+    print(dictinatyLine1)
+    print(dictinatyLine2)
+    print(dictinatyLine3)
 

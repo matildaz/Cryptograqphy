@@ -3,13 +3,16 @@ import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-keyChangeArray = {"a":"b","b":"c","c":"d","d":"e",
-                "e":"f","f":"g","g":"h","h":"i",
-                "i":"j","j":"k","k":"l","l":"m",
-                "m":"n","n":"o","o":"p","p":"q",
-                "q":"r","r":"s","s":"t","t":"u",
-                "u":"v","v":"w","w":"x","x":"y",
-                "y":"z","z":"a"}
+keyChangeArray = {"g":"e", "m":"t", "c":"a", "x":"s",
+                  "t":"r", "u":"o", "j":"i", "r":"k",
+                  "v":"l", "a":"h", "i":"c", "k":"f",
+                  "z":"g", "s":"m", "y":"u", "h":"d",
+                  "n":"y", "f":"p", "q":"q", "o":"b",
+                  "p":"w", "l":"v", "w":"x", "b":"j",
+                  "e":"n", "d":"z"}
+
+keyChangeArray_1 = {"c":"a", "e":"n", "v":"l", "n":"y", "x":"s", "j":"i", "o":"b", "g":"e",
+                    "h":"d", "u":"o", "m":"t", "a":"h"}
 
 def findKeyByValue(char: str, dictionary: dict) -> str:
     char = char.lower()
@@ -58,4 +61,4 @@ def readlines(state: str):
                 decodedText.write(decodedLine)
 
 if __name__ == "__main__":
-    readlines("decode")
+    readlines("encode")

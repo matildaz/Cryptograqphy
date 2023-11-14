@@ -2,7 +2,6 @@ import sympy
 from keyGenerator import generateKey
 import binascii
 import base64
-import random
 import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -35,6 +34,8 @@ def RSAdecode(closed: int, n: int, cipherText: str):
 def blockSize(n: int):
     byteN = bin(n)
     size = len(byteN) - 2
+    if size - 1 < 8:
+        return 8
     return size - 1
 
 def unpackBlocks(data: bytes, bs: int):
@@ -79,6 +80,7 @@ def packBlocks(blocks: list, bs: int):
                 k = 0
     if c:
         data += bytes([rem])
+    print(data)
     return data
 
 def RSAmain(state: str, key: dict({str: int})) -> str: #key = [ e , d , n ]
@@ -104,8 +106,8 @@ def RSAmain(state: str, key: dict({str: int})) -> str: #key = [ e , d , n ]
     return ""
 
 if __name__ == "__main__":
-    p = sympy.randprime(pow(2,100), pow(2,101))
-    q = sympy.randprime(pow(2,100), pow(2,101))
+    p = sympy.randprime(pow(2,512), pow(2,513))
+    q = sympy.randprime(pow(2,512), pow(2,513))
     dictionary = generateKey(p,q)
     e = dictionary["e"]
     d = dictionary["d"]
@@ -114,5 +116,4 @@ if __name__ == "__main__":
     print("d = ", dictionary["d"])
     print("n = ", dictionary["n"])
 
-    # RSAmain("encode", dictionary)
-    # RSAmain("decode", dictionary)
+    print(RSAdecode(d,n,RSAencode(e,n,"Hello World!")))

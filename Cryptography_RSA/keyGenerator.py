@@ -1,6 +1,5 @@
 import random
 import math
-from pandas import array
 from sqlalchemy import false, true
 
 
@@ -26,7 +25,7 @@ def generateKey(P: int, Q: int):
 
     randomKeyE, randomKeyD = choose_E_and_D(arrayOfPossibleKeys, Yn)
 
-    return randomKeyE, randomKeyD, N
+    return {"e":randomKeyE, "d":randomKeyD, "n":N}
 
 def choose_E_and_D(arrayOfKeys, Yn: int):
     randomKeyE = random.randint(0, len(arrayOfKeys)-1)
@@ -69,9 +68,17 @@ def Extended_Euclidean_algorithm(a: int, b: int) -> int:
     return y
 
 if __name__ == "__main__" :
-    p = 8527
-    q = 7829
-    e, d, n = generateKey(p,q)
-    print("e = ", e)
-    print("d = ", d)
-    print("n = ", n)
+    p = 7
+    q = 11
+    dictionary = generateKey(p,q)
+    print("e = ", dictionary["e"])
+    print("d = ", dictionary["d"])
+    print("n = ", dictionary["n"])
+
+    openText = 13
+    print(openText)
+    ciphertext = pow(openText,dictionary["e"],dictionary["n"])
+    openText = pow(ciphertext,dictionary["d"],dictionary["n"])
+
+    print(ciphertext)
+    print(openText)
